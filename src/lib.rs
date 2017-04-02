@@ -2,8 +2,8 @@
 
 #[derive(Hash)]
 pub struct Key {
-    value: char,
-    shifted: char,
+    pub value: char,
+    pub shifted: char,
 }
 
 impl PartialEq for Key {
@@ -18,3 +18,12 @@ impl PartialEq for Key {
     }
 }
 
+pub enum Direction {
+    Previous = -1,
+    Next = 1,
+}
+
+pub struct Edge {
+    pub horizontal: Direction,
+    pub vertical: Direction,
+}
