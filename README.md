@@ -1,5 +1,5 @@
 # keyboard-graphs
-![Build Status](https://travis-ci.org/xd009642/keygraph-rs.svg?branch=master)[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Build Status](https://travis-ci.org/xd009642/keygraph-rs.svg?branch=master)[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Latest Version](https://img.shields.io/crates/v/keygraph-rs.svg)](https://crates.io/crates/keygraph-rs)
 
 ## Introduction
 
