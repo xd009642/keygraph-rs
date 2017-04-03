@@ -73,7 +73,7 @@ fn get_aligned_positions() -> Vec<Edge> {
 
 lazy_static! {
     pub static ref QWERTY_US: Graph<Key, Edge> = generate_qwerty_us();
-    
+    pub static ref DVORAK: Graph<Key, Edge> = generate_dvorak(); 
     pub static ref STANDARD_NUMPAD: Graph<Key, Edge> = generate_standard_numpad();
     pub static ref MAC_NUMPAD: Graph<Key, Edge> = generate_mac_numpad();
 }
@@ -217,6 +217,48 @@ fn generate_qwerty_us() -> Graph<Key, Edge> {
     result
 }
 
+
+fn generate_dvorak() -> Graph<Key, Edge> {
+    let mut result = Graph::<Key, Edge>::new();
+    // This is a bit nasty but I don't see how to do it nicer..
+    // Trailing space after \n represents keyboard offset.
+    let qwerty_us = "` 1 2 3 4 5 6 7 8 9 0 [ ]\n\
+                      \0 ' , . p y f g c r l / = \\\n\
+                      \0 a o e u i d h t n s -\n\
+                      \0 ; q j k x b m w v z";
+
+    let mut index_map = add_alphabetics(&mut result);
+    
+    let remaining_keys = vec![ 
+        Key{ value: '`', shifted: '~'},
+        Key{ value: '1', shifted: '!'},
+        Key{ value: '2', shifted: '@'},
+        Key{ value: '3', shifted: '#'},
+        Key{ value: '4', shifted: '$'},
+        Key{ value: '5', shifted: '%'},
+        Key{ value: '6', shifted: '^'},
+        Key{ value: '7', shifted: '&'},
+        Key{ value: '8', shifted: '*'},
+        Key{ value: '9', shifted: '('},
+        Key{ value: '0', shifted: ')'},
+        Key{ value: '-', shifted: '_'},
+        Key{ value: '=', shifted: '+'},
+        Key{ value: '[', shifted: '{'},
+        Key{ value: ']', shifted: '}'},
+        Key{ value: '\\', shifted: '|'},
+        Key{ value: ';', shifted: ':'},
+        Key{ value: '\'', shifted: '\"'},
+        Key{ value: ',', shifted: '<'},
+        Key{ value: '.', shifted: '>'},
+        Key{ value: '/', shifted: '?'}
+    ];
+    add_remaining_keys(remaining_keys, &mut result, &mut index_map);
+    
+    connect_keyboard_nodes(qwerty_us, &mut result, &index_map, 
+                           KeyboardStyle::Slanted);
+
+    result
+}
 
 fn generate_standard_numpad() -> Graph<Key, Edge> {
     let mut result = Graph::<Key, Edge>::new();
