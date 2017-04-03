@@ -38,6 +38,12 @@ pub struct Edge {
     pub vertical: Direction,
 }
 
+#[derive(PartialEq)]
+enum KeyboardStyle {
+    Slanted,
+    Aligned,
+}
+
 fn get_slanted_positions() -> Vec<Edge> {
     use Direction::{Previous, Next, Same};
     vec![ 
@@ -50,11 +56,26 @@ fn get_slanted_positions() -> Vec<Edge> {
     ]
 }
 
+fn get_aligned_positions() -> Vec<Edge> {
+    use Direction::{Previous, Next, Same};
+    vec![
+        Edge{ horizontal: Previous, vertical: Same },
+        Edge{ horizontal: Previous, vertical: Previous },
+        Edge{ horizontal: Same, vertical: Previous },
+        Edge{ horizontal: Next, vertical: Previous },
+        Edge{ horizontal: Next, vertical: Same },
+        Edge{ horizontal: Next, vertical: Next },
+        Edge{ horizontal: Same, vertical: Next },
+        Edge{ horizontal: Previous, vertical: Next },
+    ]
+}
+
 
 lazy_static! {
     pub static ref QWERTY_US: Graph<Key, Edge> = generate_qwerty_us();
     
     pub static ref STANDARD_NUMPAD: Graph<Key, Edge> = generate_standard_numpad();
+    pub static ref MAC_NUMPAD: Graph<Key, Edge> = generate_mac_numpad();
 }
 
 #[test]
@@ -98,20 +119,19 @@ fn add_unshifted_number_keys(graph: &mut Graph<Key, Edge>) -> HashMap<char, Node
 }
 
 
-fn join_qwerty_us(graph: &mut Graph<Key, Edge>, 
-                  indexes: &HashMap<char, NodeIndex>) {
-    // This is a bit nasty but I don't see how to do it nicer..
-    // Trailing space after \n represents keyboard offset.
-    let qwerty_us = "` 1 2 3 4 5 6 7 8 9 0 - =\n\
-                      \0 q w e r t y u i o p [ ] \\\n\
-                      \0 a s d f g h j k l ; '\n\
-                      \0 z x c v b n m , . /";
+fn connect_keyboard_nodes(keyboard: &str,
+                          graph: &mut Graph<Key, Edge>, 
+                          indexes: &HashMap<char, NodeIndex>,
+                          style: KeyboardStyle) {
 
-    let relative_positions = get_slanted_positions();
-
-    let rows = qwerty_us.lines()
-                        .map(|x| x.chars().filter(|y| y != &' ').collect::<Vec<char>>())
-                        .collect::<Vec<Vec<char>>>();
+    let relative_positions = if style == KeyboardStyle::Slanted {
+        get_slanted_positions()
+    } else { 
+        get_aligned_positions()
+    };
+    let rows = keyboard.lines()
+                       .map(|x| x.chars().filter(|y| y != &' ').collect::<Vec<char>>())
+                       .collect::<Vec<Vec<char>>>();
     
     let rowcount = rows.iter().count() as i32;
     for (i, row) in rows.iter().enumerate() {
@@ -144,10 +164,26 @@ fn join_qwerty_us(graph: &mut Graph<Key, Edge>,
     }
 }
 
+fn add_remaining_keys(keys: Vec<Key>, 
+                      graph: &mut Graph<Key, Edge>, 
+                      index_map: &mut HashMap<char, NodeIndex> ) {
+    
+    for k in keys.iter() {
+        let index = graph.add_node(k.clone());
+        index_map.insert(k.value, index);
+    }
+}
+
 
 fn generate_qwerty_us() -> Graph<Key, Edge> {
     let mut result = Graph::<Key, Edge>::new();
-    
+    // This is a bit nasty but I don't see how to do it nicer..
+    // Trailing space after \n represents keyboard offset.
+    let qwerty_us = "` 1 2 3 4 5 6 7 8 9 0 - =\n\
+                      \0 q w e r t y u i o p [ ] \\\n\
+                      \0 a s d f g h j k l ; '\n\
+                      \0 z x c v b n m , . /";
+
     let mut index_map = add_alphabetics(&mut result);
     
     let remaining_keys = vec![ 
@@ -173,12 +209,10 @@ fn generate_qwerty_us() -> Graph<Key, Edge> {
         Key{ value: '.', shifted: '>'},
         Key{ value: '/', shifted: '?'}
     ];
-
-    for k in remaining_keys.iter() {
-        let index = result.add_node(k.clone());
-        index_map.insert(k.value, index);
-    }
-    join_qwerty_us(&mut result, &index_map);
+    add_remaining_keys(remaining_keys, &mut result, &mut index_map);
+    
+    connect_keyboard_nodes(qwerty_us, &mut result, &index_map, 
+                           KeyboardStyle::Slanted);
 
     result
 }
@@ -186,8 +220,51 @@ fn generate_qwerty_us() -> Graph<Key, Edge> {
 
 fn generate_standard_numpad() -> Graph<Key, Edge> {
     let mut result = Graph::<Key, Edge>::new();
-    
+    let numpad = "\0 / * -\n\
+                  7 8 9 +\n\
+                  4 5 6\n\
+                  1 2 3\n\
+                  \0 0 .";  
+
     let mut index_map = add_unshifted_number_keys(&mut result);
     
+    let remaining_keys = vec![
+        Key{ value: '/', shifted: '\0'},
+        Key{ value: '*', shifted: '\0'},
+        Key{ value: '-', shifted: '\0'},
+        Key{ value: '+', shifted: '\0'},
+        Key{ value: '.', shifted: '\0'}
+    ];
+    add_remaining_keys(remaining_keys, &mut result, &mut index_map);
+
+    connect_keyboard_nodes(numpad, &mut result, &mut index_map, 
+                           KeyboardStyle::Aligned);
     result
 }
+
+fn generate_mac_numpad() -> Graph<Key, Edge> {
+     let mut result = Graph::<Key, Edge>::new();
+    let numpad = "\0 = / *\n\
+                  7 8 9 -\n\
+                  4 5 6 +\n\
+                  1 2 3\n\
+                  \0 0 .";  
+
+    let mut index_map = add_unshifted_number_keys(&mut result);
+    
+    let remaining_keys = vec![
+        Key{ value: '/', shifted: '\0'},
+        Key{ value: '*', shifted: '\0'},
+        Key{ value: '-', shifted: '\0'},
+        Key{ value: '+', shifted: '\0'},
+        Key{ value: '.', shifted: '\0'},
+        Key{ value: '=', shifted: '\0'}
+    ];
+    add_remaining_keys(remaining_keys, &mut result, &mut index_map);
+
+    connect_keyboard_nodes(numpad, &mut result, &mut index_map, 
+                           KeyboardStyle::Aligned);
+    result   
+}
+
+
