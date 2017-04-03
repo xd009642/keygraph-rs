@@ -61,7 +61,6 @@ lazy_static! {
 fn test_qwerty_us() {
     // Printing out graphviz for debugging
     println!("{:?}", Dot::with_config(&*QWERTY_US, &[Config::EdgeNoLabel]));
-
 }
 
 static ALPHABET: &'static str = "abcdefghijklmnopqrstuvwxyz";
@@ -103,10 +102,10 @@ fn join_qwerty_us(graph: &mut Graph<Key, Edge>,
                   indexes: &HashMap<char, NodeIndex>) {
     // This is a bit nasty but I don't see how to do it nicer..
     // Trailing space after \n represents keyboard offset.
-    let qwerty_us = "` 1 2 3 4 5 6 7 8 9 0 - =\n \
-                      q w e r t y u i o p [ ] \\\n \
-                      a s d f g h j k l ; '\n \
-                      z x c v b n m , . /";
+    let qwerty_us = "` 1 2 3 4 5 6 7 8 9 0 - =\n\
+                      \0 q w e r t y u i o p [ ] \\\n\
+                      \0 a s d f g h j k l ; '\n\
+                      \0 z x c v b n m , . /";
 
     let relative_positions = get_slanted_positions();
 
@@ -116,7 +115,6 @@ fn join_qwerty_us(graph: &mut Graph<Key, Edge>,
     
     let rowcount = rows.iter().count() as i32;
     for (i, row) in rows.iter().enumerate() {
-        let colcount = row.iter().count() as i32;
         for (j, key) in row.iter().enumerate() {
             if !indexes.contains_key(key) {
                 continue;
@@ -126,7 +124,7 @@ fn join_qwerty_us(graph: &mut Graph<Key, Edge>,
             for dir in relative_positions.iter() {
                 let y:i32 = i as i32 + dir.vertical as i32;
                 let x:i32 = j as i32 + dir.horizontal as i32;
-                if y > -1 && y < rowcount && x > -1 && x < colcount {
+                if y > -1 && y < rowcount && x > -1 {
                     let temp_row = if dir.vertical == Direction::Same {
                         row
                     } else {
