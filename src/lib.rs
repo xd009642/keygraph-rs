@@ -216,6 +216,7 @@ fn connect_keyboard_nodes(keyboard: &str,
                     shifted: '\0',
                 }
             };
+            println!("Current {:?}", k);
 
             for dir in relative_positions.iter() {
                 let y: i32 = i as i32 + dir.vertical as i32;
@@ -230,8 +231,9 @@ fn connect_keyboard_nodes(keyboard: &str,
                     if let Some(temp_char) = temp_row.get(x as usize) {
 
                         let n = graph.find_key(*temp_char);
-
+                        
                         if n.is_none() && !add_missing_keys {
+                            println!("Key {} doesn't exist", temp_char);
                             continue;
                         }
 
@@ -243,7 +245,7 @@ fn connect_keyboard_nodes(keyboard: &str,
                                 shifted: '\0',
                             }
                         };
-
+            
                         graph.add_edge(k, n, *dir);
                     }
                 }
@@ -266,9 +268,9 @@ fn generate_qwerty_us() -> DiGraphMap<Key, Edge> {
     let mut result = DiGraphMap::<Key, Edge>::new();
     // This is a bit nasty but I don't see how to do it nicer..
     // Trailing space after \n represents keyboard offset.
-    let qwerty_us = "` 1 2 3 4 5 6 7 8 9 0 - =\n
-                     \0 q w e r t y u i o p [ ] \\\n
-                     \0 a s d f g h j k l ; '\n
+    let qwerty_us = "` 1 2 3 4 5 6 7 8 9 0 - =\n\
+                     \0 q w e r t y u i o p [ ] \\\n\
+                     \0 a s d f g h j k l ; '\n\
                      \0 z x c v b n m , . /";
 
     add_alphabetics(&mut result);
@@ -308,9 +310,9 @@ fn generate_dvorak() -> DiGraphMap<Key, Edge> {
     let mut result = DiGraphMap::<Key, Edge>::new();
     // This is a bit nasty but I don't see how to do it nicer..
     // Trailing space after \n represents keyboard offset.
-    let qwerty_us = "` 1 2 3 4 5 6 7 8 9 0 [ ]\n
-                      \0 ' , . p y f g c r l / = \\\n
-                      \0 a o e u i d h t n s -\n
+    let qwerty_us = "` 1 2 3 4 5 6 7 8 9 0 [ ]\n\
+                      \0 ' , . p y f g c r l / = \\\n\
+                      \0 a o e u i d h t n s -\n\
                       \0 ; q j k x b m w v z";
 
     add_alphabetics(&mut result);
