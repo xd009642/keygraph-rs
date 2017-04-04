@@ -216,7 +216,6 @@ fn connect_keyboard_nodes(keyboard: &str,
                     shifted: '\0',
                 }
             };
-            println!("Current {:?}", k);
 
             for dir in relative_positions.iter() {
                 let y: i32 = i as i32 + dir.vertical as i32;
@@ -233,7 +232,6 @@ fn connect_keyboard_nodes(keyboard: &str,
                         let n = graph.find_key(*temp_char);
                         
                         if n.is_none() && !add_missing_keys {
-                            println!("Key {} doesn't exist", temp_char);
                             continue;
                         }
 

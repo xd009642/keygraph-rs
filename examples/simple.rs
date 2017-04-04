@@ -23,7 +23,6 @@ fn simple() {
 }
 
 
-
 fn main() {
     simple();
 }
