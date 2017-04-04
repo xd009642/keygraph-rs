@@ -17,13 +17,13 @@ fn test_keyboard_contents() {
     for keyboard in relevant_keyboards.iter() {
         for c in characters.chars() {
             println!("{}", c);
-            let key = QWERTY_US.find_key(c);
+            let key = keyboard.find_key(c);
             assert!(key.is_some());
             let key = key.unwrap();
             assert!(key.value ==  c || key.shifted == c);
         }
         for c in alphabet.chars() {
-            let key = QWERTY_US.find_key(c);
+            let key = keyboard.find_key(c);
             let made_key = Key {
                 value: c,
                 shifted: c.to_uppercase().nth(0).unwrap()
@@ -36,15 +36,25 @@ fn test_keyboard_contents() {
     }
 }
 
+fn test_neighbours(expected: Vec<Key>,
+                   actual: Vec<Key>) {
+    assert_eq!(expected.iter().count(), actual.iter().count());
+
+    for n in actual.iter() {
+        let others = expected.iter().filter(|x| **x != *n).count();
+        assert_eq!(others, expected.iter().count()-1);
+    }
+}
+
 
 #[test]
 fn test_qwerty_us() {
-    
+    // testing 'g'
     let reference_key = QWERTY_US.find_key('g');
     assert!(reference_key.is_some());
     let reference_key = reference_key.unwrap();
 
-    let mut expected = vec![
+    let expected = vec![
         QWERTY_US.find_key('f').unwrap(),
         QWERTY_US.find_key('h').unwrap(),
         QWERTY_US.find_key('t').unwrap(),
@@ -56,10 +66,90 @@ fn test_qwerty_us() {
     let actual = QWERTY_US.neighbors_directed(reference_key, Direction::Incoming)
                           .collect::<Vec<_>>();
 
-    assert_eq!(expected.iter().count(), actual.iter().count());
+    test_neighbours(expected, actual);
 
-    for n in actual.iter() {
-        let others = expected.iter().filter(|x| **x != *n).count();
-        assert_eq!(others, expected.iter().count()-1);
-    }
+    // testing '`'
+    let reference_key = QWERTY_US.find_key('`');
+    assert!(reference_key.is_some());
+    let reference_key = reference_key.unwrap();
+
+    let expected = vec![
+        QWERTY_US.find_key('1').unwrap()
+    ];
+    
+    let actual = QWERTY_US.neighbors_directed(reference_key, Direction::Incoming)
+                          .collect::<Vec<_>>();
+
+    test_neighbours(expected, actual);
+
+    // testing 'c'
+    let reference_key = QWERTY_US.find_key('c');
+    assert!(reference_key.is_some());
+    let reference_key = reference_key.unwrap();
+
+    let expected = vec![
+        QWERTY_US.find_key('x').unwrap(),
+        QWERTY_US.find_key('v').unwrap(),
+        QWERTY_US.find_key('d').unwrap(),
+        QWERTY_US.find_key('f').unwrap(),
+    ];
+    
+    let actual = QWERTY_US.neighbors_directed(reference_key, Direction::Incoming)
+                          .collect::<Vec<_>>();
+
+    test_neighbours(expected, actual);
+
+}
+
+#[test]
+fn test_dvorak() {
+    // testing 'y'
+    let reference_key = DVORAK.find_key('y');
+    assert!(reference_key.is_some());
+    let reference_key = reference_key.unwrap();
+
+    let expected = vec![
+        QWERTY_US.find_key('p').unwrap(),
+        QWERTY_US.find_key('5').unwrap(),
+        QWERTY_US.find_key('6').unwrap(),
+        QWERTY_US.find_key('f').unwrap(),
+        QWERTY_US.find_key('i').unwrap(),
+        QWERTY_US.find_key('u').unwrap()
+    ];
+    
+    let actual = DVORAK.neighbors_directed(reference_key, Direction::Incoming)
+                       .collect::<Vec<_>>();
+
+    test_neighbours(expected, actual);
+
+    // testing '~'
+    let reference_key = DVORAK.find_key('~');
+    assert!(reference_key.is_some());
+    let reference_key = reference_key.unwrap();
+
+    let expected = vec![
+        DVORAK.find_key('1').unwrap()
+    ];
+    
+    let actual = DVORAK.neighbors_directed(reference_key, Direction::Incoming)
+                       .collect::<Vec<_>>();
+
+    test_neighbours(expected, actual);
+
+    // testing 'z'
+    let reference_key = QWERTY_US.find_key('z');
+    assert!(reference_key.is_some());
+    let reference_key = reference_key.unwrap();
+
+    let expected = vec![
+        QWERTY_US.find_key('v').unwrap(),
+        QWERTY_US.find_key('s').unwrap(),
+        QWERTY_US.find_key('-').unwrap()
+    ];
+    
+    let actual = DVORAK.neighbors_directed(reference_key, Direction::Incoming)
+                       .collect::<Vec<_>>();
+
+    test_neighbours(expected, actual);
+
 }
