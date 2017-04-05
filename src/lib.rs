@@ -275,7 +275,7 @@ fn generate_qwerty_uk() -> DiGraphMap<Key, Edge> {
     // Trailing space after \n represents keyboard offset.
     let qwerty_uk = "` 1 2 3 4 5 6 7 8 9 0 - =\n\
                      \0 q w e r t y u i o p [ ] \\\n\
-                     \0 a s d f g h j k l ; #\n\
+                     \0 a s d f g h j k l ; ' #\n\
                      \0 z x c v b n m , . /";
 
     add_alphabetics(&mut result);
@@ -301,7 +301,8 @@ fn generate_qwerty_uk() -> DiGraphMap<Key, Edge> {
         Key{ value: '\'', shifted: '@'},
         Key{ value: ',', shifted: '<'},
         Key{ value: '.', shifted: '>'},
-        Key{ value: '/', shifted: '?'}
+        Key{ value: '/', shifted: '?'},
+        Key{ value: '#', shifted: '~'}
     ];
     add_remaining_keys(remaining_keys, &mut result);
 
