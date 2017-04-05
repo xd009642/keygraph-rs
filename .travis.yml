@@ -12,10 +12,6 @@ script:
 - cargo build
 - cargo test
 
-before_script:
-  - |
-    pip install 'travis-cargo<0.2' --user &&
-    export PATH=$HOME/.local/bin:$PATH
 addons:
   apt:
     packages:
@@ -26,6 +22,15 @@ addons:
       - gcc
       - binutils-dev
 
-after_success: 
-- |
-  travis-cargo coveralls --no-sudo --verify  --kcov-options="--coveralls-id=$repo_token"
+after_success: |
+  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz
+  tar xzf master.tar.gz
+  cd kcov-master
+  mkdir build
+  cd build
+  cmake ..
+  make
+  sudo make install && cd ../.. &&
+  cargo clean
+  cargo test --no-run
+  kcov --coveralls_id=$repo_token --exclude-pattern=/.cargo target/kcov target/debug/keygraph_rs-*
