@@ -23,14 +23,16 @@ addons:
       - binutils-dev
 
 after_success: |
-  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz
-  tar xzf master.tar.gz
-  cd kcov-master
-  mkdir build
-  cd build
-  cmake ..
-  make
-  sudo make install && cd ../.. &&
-  cargo clean
-  cargo test --no-run
-  kcov --coveralls-id=$repo_token --exclude-pattern=/.cargo,/usr/lib --verify target/cov target/debug/keygraph_rs-* 
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+    wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz
+    tar xzf master.tar.gz
+    cd kcov-master
+    mkdir build
+    cd build
+    cmake ..
+    make
+    sudo make install && cd ../.. &&
+    cargo clean
+    cargo test --no-run
+    kcov --coveralls-id=$repo_token --exclude-pattern=/.cargo,/usr/lib --verify target/cov target/debug/keygraph_rs-* 
+  fi
