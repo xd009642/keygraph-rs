@@ -227,7 +227,7 @@ fn add_remaining_keys(keys: Vec<Key>, graph: &mut DiGraphMap<Key, Edge>) {
 }
 
 /// Generates the graph for the qwerty US keyboard layout
-fn generate_qwerty_us() -> DiGraphMap<Key, Edge> {
+pub fn generate_qwerty_us() -> DiGraphMap<Key, Edge> {
     let mut result = DiGraphMap::<Key, Edge>::new();
     // This is a bit nasty but I don't see how to do it nicer..
     // Trailing space after \n represents keyboard offset.
@@ -269,7 +269,7 @@ fn generate_qwerty_us() -> DiGraphMap<Key, Edge> {
 }
 
 /// Generates the graph for the qwerty US keyboard layout
-fn generate_qwerty_uk() -> DiGraphMap<Key, Edge> {
+pub fn generate_qwerty_uk() -> DiGraphMap<Key, Edge> {
     let mut result = DiGraphMap::<Key, Edge>::new();
     // This is a bit nasty but I don't see how to do it nicer..
     // Trailing space after \n represents keyboard offset.
@@ -312,7 +312,7 @@ fn generate_qwerty_uk() -> DiGraphMap<Key, Edge> {
 }
 
 /// Generates a graph for the dvorak keyboard layout
-fn generate_dvorak() -> DiGraphMap<Key, Edge> {
+pub fn generate_dvorak() -> DiGraphMap<Key, Edge> {
     let mut result = DiGraphMap::<Key, Edge>::new();
     // This is a bit nasty but I don't see how to do it nicer..
     // Trailing space after \n represents keyboard offset.
@@ -354,7 +354,7 @@ fn generate_dvorak() -> DiGraphMap<Key, Edge> {
 }
 
 /// Generates a standard numpad.
-fn generate_standard_numpad() -> DiGraphMap<Key, Edge> {
+pub fn generate_standard_numpad() -> DiGraphMap<Key, Edge> {
     let mut result = DiGraphMap::<Key, Edge>::new();
     let numpad = "\0 / * -\n7 8 9 +\n4 5 6\n1 2 3\n\0 0 .";
 
@@ -366,7 +366,7 @@ fn generate_standard_numpad() -> DiGraphMap<Key, Edge> {
 
 
 /// Generates the Apple Mac style numpad
-fn generate_mac_numpad() -> DiGraphMap<Key, Edge> {
+pub fn generate_mac_numpad() -> DiGraphMap<Key, Edge> {
     let mut result = DiGraphMap::<Key, Edge>::new();
     let numpad = "\0 = / *\n7 8 9 -\n4 5 6 +\n1 2 3\n\0 0 .";
 
