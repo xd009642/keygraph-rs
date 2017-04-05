@@ -34,5 +34,5 @@ after_success: |
     sudo make install && cd ../.. &&
     cargo clean
     cargo test --no-run
-    kcov --coveralls-id=$repo_token --exclude-pattern=/.cargo,/usr/lib --verify target/cov target/debug/keygraph_rs-* 
+    kcov --coveralls-id=$repo_token --exclude-pattern=/.cargo,/usr/lib --exclude-region='#[cfg(test)]:#[cfg(testkcovstopmarker)]' --verify target/cov target/debug/keygraph_rs-* 
   fi

@@ -124,26 +124,6 @@ fn add_alphabetics(graph: &mut DiGraphMap<Key, Edge>) {
     }
 }
 
-#[test]
-fn test_alphabetics() {
-    assert_eq!(ALPHABET.chars().count(), 26);
-    
-    let mut result = DiGraphMap::<Key, Edge>::new();
-    add_alphabetics(&mut result);
-
-    let uppercase = ALPHABET.to_uppercase();
-    for (l, u) in ALPHABET.chars().zip(uppercase.chars()) {
-        let test = Key {
-            value: l,
-            shifted: u
-        };
-        assert!(result.contains_node(test));
-        // Get testing of trait for free
-        assert!(result.find_key(l).is_some());
-        assert!(result.find_key(u).is_some());
-    }
-}
-
 /// Numpads typically have no shift modifiers so use this function to populate
 /// the numeric keys.
 /// 
@@ -159,22 +139,6 @@ fn add_unshifted_number_keys(graph: &mut DiGraphMap<Key, Edge>) {
     }
 }
 
-#[test]
-fn test_add_number_keys() {
-    assert_eq!(NUMBERS.chars().count(), 10);
-    
-    let mut result = DiGraphMap::<Key, Edge>::new();
-    add_unshifted_number_keys(&mut result);
-    for c in NUMBERS.chars() {
-        let test = Key {
-            value: c,
-            shifted: '\0'
-        };
-        assert!(result.contains_node(test));
-        assert!(result.find_key(c).is_some());
-    }
-    assert!(result.find_key('\0').is_none());
-}
 
 /// Given string representation of the keyboard and it's rows and a graph of
 /// nodes this function connects the edges between the nodes. 
@@ -364,4 +328,42 @@ fn generate_mac_numpad() -> DiGraphMap<Key, Edge> {
 
     connect_keyboard_nodes(numpad, &mut result, KeyboardStyle::Aligned, true);
     result
+}
+
+
+#[test]
+fn test_alphabetics() {
+    assert_eq!(ALPHABET.chars().count(), 26);
+    
+    let mut result = DiGraphMap::<Key, Edge>::new();
+    add_alphabetics(&mut result);
+
+    let uppercase = ALPHABET.to_uppercase();
+    for (l, u) in ALPHABET.chars().zip(uppercase.chars()) {
+        let test = Key {
+            value: l,
+            shifted: u
+        };
+        assert!(result.contains_node(test));
+        // Get testing of trait for free
+        assert!(result.find_key(l).is_some());
+        assert!(result.find_key(u).is_some());
+    }
+}
+
+#[test]
+fn test_add_number_keys() {
+    assert_eq!(NUMBERS.chars().count(), 10);
+    
+    let mut result = DiGraphMap::<Key, Edge>::new();
+    add_unshifted_number_keys(&mut result);
+    for c in NUMBERS.chars() {
+        let test = Key {
+            value: c,
+            shifted: '\0'
+        };
+        assert!(result.contains_node(test));
+        assert!(result.find_key(c).is_some());
+    }
+    assert!(result.find_key('\0').is_none());
 }
