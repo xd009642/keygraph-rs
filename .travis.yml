@@ -32,5 +32,6 @@ after_success: |
     cmake ..
     make
     sudo make install && cd ../.. &&
-    for file in target/debug/keygraph_rs-*; do mkdir -p "target/cov/$(basename $file)"; kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; 
+    python generate_coverage.py
+    
   fi
