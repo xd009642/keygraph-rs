@@ -28,4 +28,4 @@ addons:
 
 after_success: 
 - |
-  travis-cargo coveralls --no-sudo --verify
+  travis-cargo coveralls --no-sudo --verify  --kcov-options="--coveralls-id=$repo_token"
