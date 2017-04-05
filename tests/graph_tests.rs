@@ -98,7 +98,76 @@ fn test_qwerty_us() {
                           .collect::<Vec<_>>();
 
     test_neighbours(expected, actual);
+}
 
+#[test]
+fn test_qwerty_uk() {
+    // testing 'g'
+    let reference_key = QWERTY_UK.find_key('g');
+    assert!(reference_key.is_some());
+    let reference_key = reference_key.unwrap();
+
+    let expected = vec![
+        QWERTY_US.find_key('f').unwrap(),
+        QWERTY_US.find_key('h').unwrap(),
+        QWERTY_US.find_key('t').unwrap(),
+        QWERTY_US.find_key('y').unwrap(),
+        QWERTY_US.find_key('v').unwrap(),
+        QWERTY_US.find_key('b').unwrap()
+    ];
+    
+    let actual = QWERTY_UK.neighbors_directed(reference_key, Direction::Incoming)
+                          .collect::<Vec<_>>();
+
+    test_neighbours(expected, actual);
+
+    // testing '`'
+    let reference_key = QWERTY_UK.find_key('`');
+    assert!(reference_key.is_some());
+    let reference_key = reference_key.unwrap();
+
+    let expected = vec![
+        QWERTY_US.find_key('1').unwrap()
+    ];
+    
+    let actual = QWERTY_UK.neighbors_directed(reference_key, Direction::Incoming)
+                          .collect::<Vec<_>>();
+
+    test_neighbours(expected, actual);
+
+    // testing 'c'
+    let reference_key = QWERTY_UK.find_key('c');
+    assert!(reference_key.is_some());
+    let reference_key = reference_key.unwrap();
+
+    let expected = vec![
+        QWERTY_US.find_key('x').unwrap(),
+        QWERTY_US.find_key('v').unwrap(),
+        QWERTY_US.find_key('d').unwrap(),
+        QWERTY_US.find_key('f').unwrap(),
+    ];
+    
+    let actual = QWERTY_UK.neighbors_directed(reference_key, Direction::Incoming)
+                          .collect::<Vec<_>>();
+
+    test_neighbours(expected, actual);
+
+    // testing '6'
+    let reference_key = QWERTY_UK.find_key('6');
+    assert!(reference_key.is_some());
+    let reference_key = reference_key.unwrap();
+
+    let expected = vec![
+        QWERTY_US.find_key('%').unwrap(),
+        QWERTY_US.find_key('&').unwrap(),
+        QWERTY_US.find_key('t').unwrap(),
+        QWERTY_US.find_key('y').unwrap(),
+    ];
+    
+    let actual = QWERTY_UK.neighbors_directed(reference_key, Direction::Incoming)
+                          .collect::<Vec<_>>();
+
+    test_neighbours(expected, actual);
 }
 
 #[test]

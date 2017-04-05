@@ -98,6 +98,7 @@ fn get_aligned_positions() -> Vec<Edge> {
 /// Keyboards exported to the user.
 lazy_static! {
     pub static ref QWERTY_US: DiGraphMap<Key, Edge> = generate_qwerty_us();
+    pub static ref QWERTY_UK: DiGraphMap<Key, Edge> = generate_qwerty_uk();
     pub static ref DVORAK: DiGraphMap<Key, Edge> = generate_dvorak(); 
     pub static ref STANDARD_NUMPAD: DiGraphMap<Key, Edge> = generate_standard_numpad();
     pub static ref MAC_NUMPAD: DiGraphMap<Key, Edge> = generate_mac_numpad();
@@ -263,6 +264,48 @@ fn generate_qwerty_us() -> DiGraphMap<Key, Edge> {
     add_remaining_keys(remaining_keys, &mut result);
 
     connect_keyboard_nodes(qwerty_us, &mut result, KeyboardStyle::Slanted, false);
+
+    result
+}
+
+/// Generates the graph for the qwerty US keyboard layout
+fn generate_qwerty_uk() -> DiGraphMap<Key, Edge> {
+    let mut result = DiGraphMap::<Key, Edge>::new();
+    // This is a bit nasty but I don't see how to do it nicer..
+    // Trailing space after \n represents keyboard offset.
+    let qwerty_uk = "` 1 2 3 4 5 6 7 8 9 0 - =\n\
+                     \0 q w e r t y u i o p [ ] \\\n\
+                     \0 a s d f g h j k l ; #\n\
+                     \0 z x c v b n m , . /";
+
+    add_alphabetics(&mut result);
+
+    let remaining_keys = vec![ 
+        Key{ value: '`', shifted: '¬'},
+        Key{ value: '1', shifted: '!'},
+        Key{ value: '2', shifted: '\"'},
+        Key{ value: '3', shifted: '£'},
+        Key{ value: '4', shifted: '$'},
+        Key{ value: '5', shifted: '%'},
+        Key{ value: '6', shifted: '^'},
+        Key{ value: '7', shifted: '&'},
+        Key{ value: '8', shifted: '*'},
+        Key{ value: '9', shifted: '('},
+        Key{ value: '0', shifted: ')'},
+        Key{ value: '-', shifted: '_'},
+        Key{ value: '=', shifted: '+'},
+        Key{ value: '[', shifted: '{'},
+        Key{ value: ']', shifted: '}'},
+        Key{ value: '\\', shifted: '|'},
+        Key{ value: ';', shifted: ':'},
+        Key{ value: '\'', shifted: '@'},
+        Key{ value: ',', shifted: '<'},
+        Key{ value: '.', shifted: '>'},
+        Key{ value: '/', shifted: '?'}
+    ];
+    add_remaining_keys(remaining_keys, &mut result);
+
+    connect_keyboard_nodes(qwerty_uk, &mut result, KeyboardStyle::Slanted, false);
 
     result
 }
