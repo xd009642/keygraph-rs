@@ -2,7 +2,9 @@
 extern crate lazy_static;
 extern crate petgraph;
 
-use petgraph::graphmap::DiGraphMap;
+pub use petgraph::graphmap::DiGraphMap;
+
+pub type Keyboard = DiGraphMap<Key, Edge>;
 
 /// Datatype for graph nodes representing a key on the keyboard.
 #[derive(Hash, Debug, Clone, Copy, Ord, PartialOrd, Eq, PartialEq)]
@@ -97,11 +99,11 @@ fn get_aligned_positions() -> Vec<Edge> {
 
 /// Keyboards exported to the user.
 lazy_static! {
-    pub static ref QWERTY_US: DiGraphMap<Key, Edge> = generate_qwerty_us();
-    pub static ref QWERTY_UK: DiGraphMap<Key, Edge> = generate_qwerty_uk();
-    pub static ref DVORAK: DiGraphMap<Key, Edge> = generate_dvorak(); 
-    pub static ref STANDARD_NUMPAD: DiGraphMap<Key, Edge> = generate_standard_numpad();
-    pub static ref MAC_NUMPAD: DiGraphMap<Key, Edge> = generate_mac_numpad();
+    pub static ref QWERTY_US: Keyboard = generate_qwerty_us();
+    pub static ref QWERTY_UK: Keyboard = generate_qwerty_uk();
+    pub static ref DVORAK: Keyboard = generate_dvorak(); 
+    pub static ref STANDARD_NUMPAD: Keyboard = generate_standard_numpad();
+    pub static ref MAC_NUMPAD: Keyboard = generate_mac_numpad();
 }
 
 
@@ -116,7 +118,7 @@ static NUMBERS: &'static str = "0123456789";
 ///
 /// This function takes a graph representing the keyboard as an argument so it
 /// can insert the nodes
-fn add_alphabetics(graph: &mut DiGraphMap<Key, Edge>) {
+fn add_alphabetics(graph: &mut Keyboard) {
     for c in ALPHABET.chars() {
         graph.add_node(Key {
             value: c,
@@ -130,7 +132,7 @@ fn add_alphabetics(graph: &mut DiGraphMap<Key, Edge>) {
 /// 
 /// This function takes a graph representing the keyboard as an argument so it
 /// can insert the nodes
-fn add_unshifted_number_keys(graph: &mut DiGraphMap<Key, Edge>) {
+fn add_unshifted_number_keys(graph: &mut Keyboard) {
 
     for c in NUMBERS.chars() {
         graph.add_node(Key {
@@ -152,7 +154,7 @@ fn add_unshifted_number_keys(graph: &mut DiGraphMap<Key, Edge>) {
 /// * add_missing_keys - whether missing keys should be added to the graph or 
 ///     ignored
 fn connect_keyboard_nodes(keyboard: &str,
-                          graph: &mut DiGraphMap<Key, Edge>,
+                          graph: &mut Keyboard,
                           style: KeyboardStyle,
                           add_missing_keys: bool) {
 
@@ -219,7 +221,7 @@ fn connect_keyboard_nodes(keyboard: &str,
 
 /// Any keys the user wants to specify that aren't populated by another function
 /// should be added here.
-fn add_remaining_keys(keys: Vec<Key>, graph: &mut DiGraphMap<Key, Edge>) {
+fn add_remaining_keys(keys: Vec<Key>, graph: &mut Keyboard) {
 
     for k in keys.iter() {
         graph.add_node(k.clone());
@@ -227,7 +229,7 @@ fn add_remaining_keys(keys: Vec<Key>, graph: &mut DiGraphMap<Key, Edge>) {
 }
 
 /// Generates the graph for the qwerty US keyboard layout
-pub fn generate_qwerty_us() -> DiGraphMap<Key, Edge> {
+pub fn generate_qwerty_us() -> Keyboard {
     let mut result = DiGraphMap::<Key, Edge>::new();
     // This is a bit nasty but I don't see how to do it nicer..
     // Trailing space after \n represents keyboard offset.
@@ -269,7 +271,7 @@ pub fn generate_qwerty_us() -> DiGraphMap<Key, Edge> {
 }
 
 /// Generates the graph for the qwerty US keyboard layout
-pub fn generate_qwerty_uk() -> DiGraphMap<Key, Edge> {
+pub fn generate_qwerty_uk() -> Keyboard {
     let mut result = DiGraphMap::<Key, Edge>::new();
     // This is a bit nasty but I don't see how to do it nicer..
     // Trailing space after \n represents keyboard offset.
@@ -312,7 +314,7 @@ pub fn generate_qwerty_uk() -> DiGraphMap<Key, Edge> {
 }
 
 /// Generates a graph for the dvorak keyboard layout
-pub fn generate_dvorak() -> DiGraphMap<Key, Edge> {
+pub fn generate_dvorak() -> Keyboard {
     let mut result = DiGraphMap::<Key, Edge>::new();
     // This is a bit nasty but I don't see how to do it nicer..
     // Trailing space after \n represents keyboard offset.
@@ -354,7 +356,7 @@ pub fn generate_dvorak() -> DiGraphMap<Key, Edge> {
 }
 
 /// Generates a standard numpad.
-pub fn generate_standard_numpad() -> DiGraphMap<Key, Edge> {
+pub fn generate_standard_numpad() -> Keyboard {
     let mut result = DiGraphMap::<Key, Edge>::new();
     let numpad = "\0 / * -\n7 8 9 +\n4 5 6\n1 2 3\n\0 0 .";
 
@@ -366,7 +368,7 @@ pub fn generate_standard_numpad() -> DiGraphMap<Key, Edge> {
 
 
 /// Generates the Apple Mac style numpad
-pub fn generate_mac_numpad() -> DiGraphMap<Key, Edge> {
+pub fn generate_mac_numpad() -> Keyboard {
     let mut result = DiGraphMap::<Key, Edge>::new();
     let numpad = "\0 = / *\n7 8 9 -\n4 5 6 +\n1 2 3\n\0 0 .";
 

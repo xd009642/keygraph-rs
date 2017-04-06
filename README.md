@@ -1,5 +1,5 @@
 # keyboard-graphs
-![Build Status](https://travis-ci.org/xd009642/keygraph-rs.svg?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Latest Version](https://img.shields.io/crates/v/keygraph-rs.svg)](https://crates.io/crates/keygraph-rs) [![Coverage Status](https://coveralls.io/repos/github/xd009642/keygraph-rs/badge.svg?branch=)](https://coveralls.io/github/xd009642/keygraph-rs?branch=master)
+![Build Status](https://travis-ci.org/xd009642/keygraph-rs.svg?branch=master) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Latest Version](https://img.shields.io/crates/v/keygraph-rs.svg)](https://crates.io/crates/keygraph-rs) [![Coverage Status](https://coveralls.io/repos/github/xd009642/keygraph-rs/badge.svg?branch=master)](https://coveralls.io/github/xd009642/keygraph-rs?branch=master)
 
 ## Introduction
 
