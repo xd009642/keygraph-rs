@@ -1,6 +1,6 @@
 [package]
 name = "keygraph-rs"
-version = "0.2.4"
+version = "0.2.5"
 authors = ["Daniel McKenna <danielmckenna93@gmail.com>"]
 description = "A library to generate keyboard adjacency graphs with petgraph"
 repository = "https://github.com/xd009642/keygraph-rs"

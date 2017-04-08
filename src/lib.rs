@@ -15,10 +15,35 @@ pub struct Key {
     pub shifted: char,
 }
 
+impl Key {
+    pub fn is_shifted(&self, val: char) -> bool {
+        self.shifted == val && val != '\0'
+    }
+
+    pub fn is_unshifted(&self, val: char) -> bool {
+        self.value == val && val != '\0'
+    }
+}
+
+#[test]
+fn is_shifted_test() {
+    let t = Key { 
+        value: 'a',
+        shifted: 'A'
+    };
+    assert!(t.is_shifted('A'));
+    assert!(t.is_unshifted('a'));
+    assert!(!t.is_shifted('a'));
+    assert!(!t.is_unshifted('A'));
+    assert!(!(t.is_shifted('Y') || t.is_unshifted('y')));
+}
+
 /// Trait to find a key given a single character from it. This function is 
 /// useful when you don't know what the locale of the keyboard is as numbers
 /// and symbols on a key can change (i.e. UK vs US)
 pub trait KeySearch {
+    /// Finds the key given a char from it. 
+    /// Returns Some(Key) if a key exists else returns None.
     fn find_key(&self, v: char) -> Option<Key>;
 }
 
