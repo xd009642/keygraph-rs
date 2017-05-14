@@ -25,19 +25,6 @@ impl Key {
     }
 }
 
-#[test]
-fn is_shifted_test() {
-    let t = Key { 
-        value: 'a',
-        shifted: 'A'
-    };
-    assert!(t.is_shifted('A'));
-    assert!(t.is_unshifted('a'));
-    assert!(!t.is_shifted('a'));
-    assert!(!t.is_unshifted('A'));
-    assert!(!(t.is_shifted('Y') || t.is_unshifted('y')));
-}
-
 /// Trait to find a key given a single character from it. This function is 
 /// useful when you don't know what the locale of the keyboard is as numbers
 /// and symbols on a key can change (i.e. UK vs US)
@@ -401,40 +388,58 @@ pub fn generate_mac_numpad() -> Keyboard {
     result
 }
 
+#[cfg(test)]
+mod tests {
 
-#[test]
-fn test_alphabetics() {
-    assert_eq!(ALPHABET.chars().count(), 26);
-    
-    let mut result = DiGraphMap::<Key, Edge>::new();
-    add_alphabetics(&mut result);
+    use ::*;
+    #[test]
+    fn test_alphabetics() {
+        assert_eq!(ALPHABET.chars().count(), 26);
+        
+        let mut result = DiGraphMap::<Key, Edge>::new();
+        add_alphabetics(&mut result);
 
-    let uppercase = ALPHABET.to_uppercase();
-    for (l, u) in ALPHABET.chars().zip(uppercase.chars()) {
-        let test = Key {
-            value: l,
-            shifted: u
-        };
-        assert!(result.contains_node(test));
-        // Get testing of trait for free
-        assert!(result.find_key(l).is_some());
-        assert!(result.find_key(u).is_some());
+        let uppercase = ALPHABET.to_uppercase();
+        for (l, u) in ALPHABET.chars().zip(uppercase.chars()) {
+            let test = Key {
+                value: l,
+                shifted: u
+            };
+            assert!(result.contains_node(test));
+            // Get testing of trait for free
+            assert!(result.find_key(l).is_some());
+            assert!(result.find_key(u).is_some());
+        }
     }
-}
 
-#[test]
-fn test_add_number_keys() {
-    assert_eq!(NUMBERS.chars().count(), 10);
-    
-    let mut result = DiGraphMap::<Key, Edge>::new();
-    add_unshifted_number_keys(&mut result);
-    for c in NUMBERS.chars() {
-        let test = Key {
-            value: c,
-            shifted: '\0'
-        };
-        assert!(result.contains_node(test));
-        assert!(result.find_key(c).is_some());
+    #[test]
+    fn test_add_number_keys() {
+        assert_eq!(NUMBERS.chars().count(), 10);
+        
+        let mut result = DiGraphMap::<Key, Edge>::new();
+        add_unshifted_number_keys(&mut result);
+        for c in NUMBERS.chars() {
+            let test = Key {
+                value: c,
+                shifted: '\0'
+            };
+            assert!(result.contains_node(test));
+            assert!(result.find_key(c).is_some());
+        }
+        assert!(result.find_key('\0').is_none());
     }
-    assert!(result.find_key('\0').is_none());
+
+    #[test]
+    fn is_shifted_test() {
+        let t = Key { 
+            value: 'a',
+            shifted: 'A'
+        };
+        assert!(t.is_shifted('A'));
+        assert!(t.is_unshifted('a'));
+        assert!(!t.is_shifted('a'));
+        assert!(!t.is_unshifted('A'));
+        assert!(!(t.is_shifted('Y') || t.is_unshifted('y')));
+    }
+
 }

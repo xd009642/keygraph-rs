@@ -17,4 +17,4 @@ for i, binary in enumerate(binaries):
     system('kcov --exclude-pattern=/.cargo,/usr/lib,tests --verify target/cov' + str(i) +' '+binary)
     targets.append('target/cov' + str(i))
 
-system('kcov --coveralls-id=$repo_token --merge target/cov ' + ' '.join(targets))
+system('kcov --coveralls-id=$TRAVIS_JOB_ID --merge target/cov ' + ' '.join(targets))
