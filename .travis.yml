@@ -26,15 +26,6 @@ after_success: |
   if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
     cargo clean
     cargo build
-    RUSTFLAGS='-C link-dead-code' cargo test
-    wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz
-    tar xzf master.tar.gz
-    cd kcov-master
-    mkdir build
-    cd build
-    cmake ..
-    make
-    sudo make install && cd ../.. &&
-    python generate_coverage.py
-    
+    cargo install tarpaulin
+    cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID
   fi
