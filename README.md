@@ -16,4 +16,6 @@ I'm currently implementing this library to aid in my fork of zxcvbn.
 * Expansion to non-printable keys? 
 * Spacebar
 
+## Coverage
 
+Keygraph-rs uses [cargo-tarpaulin](https://github.com/xd009642/tarpaulin) to provide code coverage. (Disclaimer I am the tarpaulin author).
