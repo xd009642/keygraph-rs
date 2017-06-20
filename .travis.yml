@@ -17,16 +17,6 @@ script:
 - cargo build
 - cargo test
 
-addons:
-  apt:
-    packages:
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-      - cmake
-      - gcc
-      - binutils-dev
-
 after_success: |
   if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
     cargo clean
