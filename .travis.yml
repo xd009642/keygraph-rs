@@ -20,7 +20,7 @@ script:
 after_success: |
   if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
     cargo clean &&
-    cargo install --git https://github.com/xd009642/tarpaulin --branch cobertura &&
+    cargo install --git https://github.com/xd009642/tarpaulin cargo-tarpaulin --branch cobertura &&
     cargo tarpaulin --out Xml &&
     bash <(curl -s https://codecov.io/bash)
   fi
